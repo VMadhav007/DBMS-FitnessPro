@@ -110,30 +110,6 @@ const AdminReports = () => {
           </div>
         </div>
       )}
-
-      {/* Top Performing Branch */}
-      {topBranch && topBranch.branch_name && (
-        <div className="report-section">
-          <h2>🏆 Top Performing Branch</h2>
-          <div className="highlight-card">
-            <div className="highlight-content">
-              <h3>{topBranch.branch_name}</h3>
-              <p className="location">{topBranch.city}</p>
-              <div className="branch-stats">
-                <div className="branch-stat">
-                  <span className="label">Total Bookings:</span>
-                  <span className="value">{topBranch.total_bookings || 0}</span>
-                </div>
-                <div className="branch-stat">
-                  <span className="label">Total Revenue:</span>
-                  <span className="value">₹{topBranch.total_revenue?.toLocaleString() || 0}</span>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      )}
-
       {/* Popular Sessions */}
       <div className="report-section">
         <h2>🔥 Popular Sessions</h2>

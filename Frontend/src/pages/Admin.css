@@ -1,23 +1,29 @@
 /* Admin Pages Shared Styles */
 
 .admin-container {
-  padding: 30px;
-  max-width: 1400px;
+  padding: 24px;
+  width: 100%;
+  min-height: 100vh;
+  background: var(--background);
+  max-width: 1440px;
   margin: 0 auto;
-  min-height: calc(100vh - 80px);
 }
 
 .admin-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 30px;
+  margin-bottom: 24px;
+  padding: 0;
 }
 
 .admin-header h1 {
-  font-size: 2.5rem;
-  color: #333;
+  font-size: 1.75rem;
+  color: var(--text-primary);
   margin: 0;
+  font-weight: 400;
+  letter-spacing: -0.5px;
+  font-family: 'Google Sans', sans-serif;
 }
 
 .loading {
@@ -30,28 +36,20 @@
 /* Form Card */
 .admin-form-card {
   background: white;
-  border-radius: 12px;
-  padding: 30px;
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
-  margin-bottom: 30px;
-  animation: slideIn 0.3s ease-out;
-}
-
-@keyframes slideIn {
-  from {
-    opacity: 0;
-    transform: translateY(-20px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
+  border-radius: 8px;
+  padding: 24px;
+  box-shadow: 0 1px 2px 0 rgba(60, 64, 67, 0.3), 0 1px 3px 1px rgba(60, 64, 67, 0.15);
+  border: none;
+  margin-bottom: 24px;
 }
 
 .admin-form-card h2 {
-  color: #667eea;
-  margin-bottom: 25px;
-  font-size: 1.5rem;
+  color: var(--text-primary);
+  margin-bottom: 20px;
+  font-size: 1.375rem;
+  font-weight: 400;
+  letter-spacing: -0.5px;
+  font-family: 'Google Sans', sans-serif;
 }
 
 /* Form Styles */
@@ -68,29 +66,36 @@
 }
 
 .form-group label {
-  font-weight: 600;
-  color: #555;
+  font-weight: 500;
+  color: var(--text-secondary);
   margin-bottom: 8px;
-  font-size: 0.95rem;
+  font-size: 0.875rem;
 }
 
 .form-group input,
 .form-group select,
 .form-group textarea {
-  padding: 12px;
-  border: 2px solid #e0e0e0;
+  padding: 12px 16px;
+  border: 1px solid var(--border-color);
   border-radius: 8px;
   font-size: 1rem;
-  transition: all 0.3s;
+  transition: border-color 0.2s cubic-bezier(0.4, 0.0, 0.2, 1);
   font-family: inherit;
+  background: white;
+}
+
+.form-group input:hover,
+.form-group select:hover,
+.form-group textarea:hover {
+  border-color: var(--google-grey-600);
 }
 
 .form-group input:focus,
 .form-group select:focus,
 .form-group textarea:focus {
   outline: none;
-  border-color: #667eea;
-  box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+  border: 2px solid var(--primary);
+  padding: 11px 15px;
 }
 
 .form-group small {
@@ -125,84 +130,88 @@
 
 /* Button Styles */
 .btn-primary {
-  padding: 12px 24px;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  padding: 10px 24px;
+  background: var(--primary);
   color: white;
   border: none;
-  border-radius: 8px;
-  font-weight: 600;
+  border-radius: 24px;
+  font-weight: 500;
   cursor: pointer;
-  transition: all 0.3s;
-  font-size: 1rem;
+  transition: all 0.2s cubic-bezier(0.4, 0.0, 0.2, 1);
+  font-size: 0.875rem;
+  min-height: 36px;
 }
 
 .btn-primary:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+  background: var(--primary-dark);
+  box-shadow: 0 1px 3px 0 rgba(60, 64, 67, 0.3), 0 4px 8px 3px rgba(60, 64, 67, 0.15);
 }
 
 .btn-secondary {
-  padding: 12px 24px;
-  background: #f0f0f0;
-  color: #555;
+  padding: 10px 24px;
+  background: var(--google-grey-100);
+  color: var(--text-primary);
   border: none;
-  border-radius: 8px;
-  font-weight: 600;
+  border-radius: 24px;
+  font-weight: 500;
   cursor: pointer;
-  transition: all 0.3s;
-  font-size: 1rem;
+  transition: all 0.2s cubic-bezier(0.4, 0.0, 0.2, 1);
+  font-size: 0.875rem;
+  min-height: 36px;
 }
 
 .btn-secondary:hover {
-  background: #e0e0e0;
+  background: var(--google-grey-200);
 }
 
 .btn-edit {
   padding: 8px 16px;
-  background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+  background: var(--primary);
   color: white;
   border: none;
-  border-radius: 6px;
-  font-weight: 600;
+  border-radius: 20px;
+  font-weight: 500;
   cursor: pointer;
-  transition: all 0.3s;
-  font-size: 0.9rem;
+  transition: all 0.2s cubic-bezier(0.4, 0.0, 0.2, 1);
+  font-size: 0.8125rem;
 }
 
 .btn-edit:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(79, 172, 254, 0.4);
+  background: var(--primary-dark);
+  box-shadow: 0 1px 2px 0 rgba(60, 64, 67, 0.3), 0 1px 3px 1px rgba(60, 64, 67, 0.15);
 }
 
 .btn-delete {
   padding: 8px 16px;
-  background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+  background: var(--error);
   color: white;
   border: none;
-  border-radius: 6px;
-  font-weight: 600;
+  border-radius: 20px;
+  font-weight: 500;
   cursor: pointer;
-  transition: all 0.3s;
-  font-size: 0.9rem;
+  transition: all 0.2s cubic-bezier(0.4, 0.0, 0.2, 1);
+  font-size: 0.8125rem;
 }
 
 .btn-delete:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(245, 87, 108, 0.4);
+  background: var(--error-dark);
+  box-shadow: 0 1px 2px 0 rgba(60, 64, 67, 0.3), 0 1px 3px 1px rgba(60, 64, 67, 0.15);
 }
 
 /* Table Card */
 .admin-table-card {
   background: white;
-  border-radius: 12px;
-  padding: 30px;
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+  border-radius: 8px;
+  padding: 24px;
+  box-shadow: 0 1px 2px 0 rgba(60, 64, 67, 0.3), 0 1px 3px 1px rgba(60, 64, 67, 0.15);
 }
 
 .admin-table-card h2 {
-  color: #333;
+  color: var(--text-primary);
   margin-bottom: 20px;
-  font-size: 1.5rem;
+  font-size: 1.375rem;
+  font-weight: 400;
+  font-family: 'Google Sans', sans-serif;
 }
 
 .table-responsive {
@@ -216,29 +225,31 @@
 }
 
 .admin-table thead {
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  color: white;
+  background: var(--google-grey-50);
+  border-bottom: 1px solid var(--border-color);
 }
 
 .admin-table th {
-  padding: 15px;
+  padding: 12px 16px;
   text-align: left;
-  font-weight: 600;
-  font-size: 0.95rem;
+  font-weight: 500;
+  font-size: 0.875rem;
+  color: var(--text-secondary);
 }
 
 .admin-table tbody tr {
-  border-bottom: 1px solid #f0f0f0;
-  transition: background 0.2s;
+  border-bottom: 1px solid var(--border-color);
+  transition: background-color 0.2s cubic-bezier(0.4, 0.0, 0.2, 1);
 }
 
 .admin-table tbody tr:hover {
-  background: #f9f9f9;
+  background: var(--google-grey-50);
 }
 
 .admin-table td {
-  padding: 15px;
-  color: #555;
+  padding: 12px 16px;
+  color: var(--text-primary);
+  font-size: 0.875rem;
 }
 
 .admin-table td.actions {
