@@ -69,7 +69,7 @@ const AdminReports = () => {
         <div className="report-section">
           <h2>💰 Revenue Report</h2>
           <div className="stats-grid">
-            <div className="stat-card highlight">
+            <div className="stat-card">
               <div className="stat-icon">💵</div>
               <div className="stat-content">
                 <h3>Total Membership Revenue</h3>

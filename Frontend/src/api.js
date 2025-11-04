@@ -60,6 +60,7 @@ export const adminAPI = {
   // Coupons
   getCoupons: () => api.get('/admin/coupons'),
   createCoupon: (data) => api.post('/admin/coupons', data),
+  deleteCoupon: (id) => api.delete(`/admin/coupons/${id}`),
   
   // Reports
   getRevenueReport: () => api.get('/admin/reports/revenue'),

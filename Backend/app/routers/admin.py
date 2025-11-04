@@ -563,6 +563,39 @@ def get_all_coupons(db: Session = Depends(get_db)):
         )
 
 
+@router.delete("/coupons/{coupon_id}")
+def delete_coupon(coupon_id: str, db: Session = Depends(get_db)):
+    """
+    Delete a coupon
+    """
+    try:
+        # Check if coupon exists
+        check_query = text("SELECT id FROM coupons WHERE id = :id")
+        result = db.execute(check_query, {'id': coupon_id}).fetchone()
+        
+        if not result:
+            raise HTTPException(
+                status_code=status.HTTP_404_NOT_FOUND,
+                detail="Coupon not found"
+            )
+        
+        # Delete the coupon
+        delete_query = text("DELETE FROM coupons WHERE id = :id")
+        db.execute(delete_query, {'id': coupon_id})
+        db.commit()
+        
+        return {"message": "Coupon deleted successfully"}
+        
+    except HTTPException:
+        raise
+    except Exception as e:
+        db.rollback()
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail=f"Failed to delete coupon: {str(e)}"
+        )
+
+
 # ==========================================
 # REPORTS & ANALYTICS
 # ==========================================

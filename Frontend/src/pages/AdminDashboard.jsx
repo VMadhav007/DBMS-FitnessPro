@@ -51,7 +51,13 @@ function AdminDashboard() {
   const totalPopularSessions = stats.popularSessions.reduce((sum, item) => sum + parseInt(item.total_bookings || 0), 0);
 
   if (loading) {
-    return <div className="admin-dashboard"><p>Loading dashboard...</p></div>;
+    return (
+      <div className="admin-dashboard" style={{display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: '100vh'}}>
+        <div style={{textAlign: 'center'}}>
+          <p>Loading dashboard...</p>
+        </div>
+      </div>
+    );
   }
 
   return (
@@ -61,8 +67,9 @@ function AdminDashboard() {
         <p>Manage your fitness center operations</p>
       </div>
 
+      {/* Stats Grid */}
       <div className="stats-grid">
-        <div className="stat-card highlight">
+        <div className="stat-card">
           <div className="stat-icon">💰</div>
           <div className="stat-info">
             <h3>Total Revenue</h3>
@@ -73,7 +80,7 @@ function AdminDashboard() {
         <div className="stat-card">
           <div className="stat-icon">👥</div>
           <div className="stat-info">
-            <h3>Active membership</h3>
+            <h3>Active Members</h3>
             <p className="stat-value">{totalActiveMembers}</p>
           </div>
         </div>
@@ -87,7 +94,7 @@ function AdminDashboard() {
         </div>
 
         <div className="stat-card">
-          <div className="stat-icon">🏋️</div>
+          <div className="stat-icon">⏰</div>
           <div className="stat-info">
             <h3>Total Sessions</h3>
             <p className="stat-value">{stats.totalSessions}</p>
@@ -103,72 +110,73 @@ function AdminDashboard() {
         </div>
       </div>
 
+      {/* Quick Actions */}
       <div className="quick-actions">
         <h2>Quick Actions</h2>
         <div className="actions-grid">
           <Link to="/admin/branches" className="action-card">
-            <span className="action-icon">🏢</span>
+            <div className="action-icon">🏢</div>
             <h3>Manage Branches</h3>
-            <p>Add, edit, or remove branches</p>
+            <p>Add, edit, or remove</p>
           </Link>
 
           <Link to="/admin/studios" className="action-card">
-            <span className="action-icon">🎯</span>
+            <div className="action-icon">🏋️</div>
             <h3>Manage Studios</h3>
-            <p>Configure studio spaces</p>
+            <p>Configure spaces</p>
           </Link>
 
           <Link to="/admin/sessions" className="action-card">
-            <span className="action-icon">📆</span>
+            <div className="action-icon">📋</div>
             <h3>Manage Sessions</h3>
-            <p>Schedule and manage sessions</p>
+            <p>Schedule sessions</p>
           </Link>
 
           <Link to="/admin/coupons" className="action-card">
-            <span className="action-icon">🎫</span>
+            <div className="action-icon">✨</div>
             <h3>Manage Coupons</h3>
-            <p>Create and manage discount coupons</p>
+            <p>Create discounts</p>
           </Link>
 
           <Link to="/admin/reports" className="action-card">
-            <span className="action-icon">📊</span>
+            <div className="action-icon">📊</div>
             <h3>View Reports</h3>
-            <p>Detailed analytics and reports</p>
+            <p>Detailed analytics</p>
           </Link>
         </div>
       </div>
 
-      <div className="dashboard-sections">
-        <div className="section">
-          <h2>Popular Sessions</h2>
-          <div className="table-container">
-            {stats.popularSessions.length > 0 ? (
-              <table className="data-table">
-                <thead>
-                  <tr>
-                    <th>Session</th>
-                    <th>Activity</th>
-                    <th>Total Bookings</th>
-                    <th>Instructor</th>
+      {/* Popular Sessions Table */}
+      <div className="section">
+        <h2>Popular Sessions</h2>
+        <p style={{color: 'var(--text-secondary)', fontSize: '0.875rem', marginBottom: '20px'}}>Most booked training sessions</p>
+        <div className="table-container">
+          {stats.popularSessions.length > 0 ? (
+            <table className="data-table">
+              <thead>
+                <tr>
+                  <th>Session</th>
+                  <th>Activity</th>
+                  <th>Total Bookings</th>
+                </tr>
+              </thead>
+              <tbody>
+                {stats.popularSessions.slice(0, 10).map((session, index) => (
+                  <tr key={index}>
+                    <td>{session.session_name}</td>
+                    <td>
+                      <span className="activity-badge">{session.activity_type}</span>
+                    </td>
+                    <td><strong>{session.total_bookings}</strong></td>
                   </tr>
-                </thead>
-                <tbody>
-                  {stats.popularSessions.slice(0, 10).map((session, index) => (
-                    <tr key={index}>
-                      <td>{session.session_name}</td>
-                      <td>
-                        <span className="activity-badge">{session.activity_type}</span>
-                      </td>
-                      <td>{session.total_bookings}</td>
-                      <td>{session.instructor_name}</td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            ) : (
-              <p className="empty-message">No session data available</p>
-            )}
-          </div>
+                ))}
+              </tbody>
+            </table>
+          ) : (
+            <div className="empty-message">
+              <p>No session data available</p>
+            </div>
+          )}
         </div>
       </div>
     </div>

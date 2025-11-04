@@ -7,6 +7,7 @@
   background: var(--background);
   max-width: 1440px;
   margin: 0 auto;
+  animation: fadeIn 0.6s var(--ease-out-expo);
 }
 
 .admin-header {
@@ -36,11 +37,18 @@
 /* Form Card */
 .admin-form-card {
   background: white;
-  border-radius: 8px;
+  border-radius: 12px;
   padding: 24px;
   box-shadow: 0 1px 2px 0 rgba(60, 64, 67, 0.3), 0 1px 3px 1px rgba(60, 64, 67, 0.15);
   border: none;
   margin-bottom: 24px;
+  transition: all 0.4s var(--ease-out-expo);
+  animation: slideInUp 0.6s var(--ease-out-expo);
+}
+
+.admin-form-card:hover {
+  box-shadow: 0 8px 24px rgba(60, 64, 67, 0.15);
+  transform: translateY(-2px);
 }
 
 .admin-form-card h2 {
@@ -201,9 +209,15 @@
 /* Table Card */
 .admin-table-card {
   background: white;
-  border-radius: 8px;
+  border-radius: 12px;
   padding: 24px;
   box-shadow: 0 1px 2px 0 rgba(60, 64, 67, 0.3), 0 1px 3px 1px rgba(60, 64, 67, 0.15);
+  transition: all 0.4s var(--ease-out-expo);
+  animation: slideInUp 0.6s var(--ease-out-expo);
+}
+
+.admin-table-card:hover {
+  box-shadow: 0 8px 24px rgba(60, 64, 67, 0.15);
 }
 
 .admin-table-card h2 {
@@ -239,11 +253,13 @@
 
 .admin-table tbody tr {
   border-bottom: 1px solid var(--border-color);
-  transition: background-color 0.2s cubic-bezier(0.4, 0.0, 0.2, 1);
+  transition: all 0.3s var(--ease-out-expo);
 }
 
 .admin-table tbody tr:hover {
   background: var(--google-grey-50);
+  transform: scale(1.01);
+  box-shadow: 0 2px 8px rgba(60, 64, 67, 0.08);
 }
 
 .admin-table td {

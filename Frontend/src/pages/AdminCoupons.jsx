@@ -89,6 +89,19 @@ const AdminCoupons = () => {
     return new Date(validTo) < new Date();
   };
 
+  const handleDelete = async (couponId, couponCode) => {
+    if (window.confirm(`Are you sure you want to delete coupon "${couponCode}"? This action cannot be undone.`)) {
+      try {
+        await adminAPI.deleteCoupon(couponId);
+        alert('Coupon deleted successfully!');
+        fetchCoupons();
+      } catch (error) {
+        console.error('Error deleting coupon:', error);
+        alert(error.response?.data?.detail || 'Failed to delete coupon');
+      }
+    }
+  };
+
   if (loading) {
     return <div className="admin-container"><div className="loading">Loading coupons...</div></div>;
   }
@@ -243,6 +256,15 @@ const AdminCoupons = () => {
                       {isExpired(coupon.valid_to) ? '⏰ Expired' : coupon.is_active ? '✅ Active' : '❌ Inactive'}
                     </span>
                   </div>
+                </div>
+                <div style={{ marginTop: '1rem', paddingTop: '1rem', borderTop: '1px solid #e0e0e0' }}>
+                  <button 
+                    className="btn-delete" 
+                    onClick={() => handleDelete(coupon.id, coupon.code)}
+                    style={{ width: '100%' }}
+                  >
+                    🗑️ Delete Coupon
+                  </button>
                 </div>
               </div>
             ))}
