@@ -370,10 +370,29 @@ CREATE PROCEDURE purchase_membership(
 BEGIN
     DECLARE v_duration INT;
     DECLARE v_end DATE;
+    DECLARE v_actual_start DATE;
+    DECLARE v_latest_end_date DATE;
     
     -- Get plan duration
     SELECT duration_months INTO v_duration FROM membership_plans WHERE id = p_plan_id;
-    SET v_end = DATE_ADD(p_start, INTERVAL v_duration MONTH);
+    
+    -- Check if user has any existing memberships (active or future)
+    -- Find the latest end_date from their memberships
+    SELECT MAX(end_date) INTO v_latest_end_date
+    FROM memberships
+    WHERE user_id = p_user_id
+      AND status IN ('active', 'pending')
+      AND end_date >= CURDATE();
+    
+    -- If there's an existing membership that hasn't expired yet, stack from its end date
+    -- Otherwise, start from current date or provided start date
+    IF v_latest_end_date IS NOT NULL AND v_latest_end_date >= CURDATE() THEN
+        SET v_actual_start = DATE_ADD(v_latest_end_date, INTERVAL 1 DAY);
+    ELSE
+        SET v_actual_start = p_start;
+    END IF;
+    
+    SET v_end = DATE_ADD(v_actual_start, INTERVAL v_duration MONTH);
     
     -- Generate IDs
     SET p_membership_id = UUID();
@@ -381,7 +400,7 @@ BEGIN
     
     -- Create membership
     INSERT INTO memberships (id, user_id, start_date, end_date, status, membership_plan_id)
-    VALUES (p_membership_id, p_user_id, p_start, v_end, 'pending', p_plan_id);
+    VALUES (p_membership_id, p_user_id, v_actual_start, v_end, 'pending', p_plan_id);
     
     -- Create payment
     INSERT INTO payments (id, user_id, membership_id, amount, payment_method, status)

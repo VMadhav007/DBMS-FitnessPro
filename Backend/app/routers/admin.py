@@ -563,6 +563,39 @@ def get_all_coupons(db: Session = Depends(get_db)):
         )
 
 
+@router.delete("/coupons/{coupon_id}")
+def delete_coupon(coupon_id: str, db: Session = Depends(get_db)):
+    """
+    Delete a coupon
+    """
+    try:
+        # Check if coupon exists
+        check_query = text("SELECT id FROM coupons WHERE id = :id")
+        result = db.execute(check_query, {'id': coupon_id}).fetchone()
+        
+        if not result:
+            raise HTTPException(
+                status_code=status.HTTP_404_NOT_FOUND,
+                detail="Coupon not found"
+            )
+        
+        # Delete the coupon
+        delete_query = text("DELETE FROM coupons WHERE id = :id")
+        db.execute(delete_query, {'id': coupon_id})
+        db.commit()
+        
+        return {"message": "Coupon deleted successfully"}
+        
+    except HTTPException:
+        raise
+    except Exception as e:
+        db.rollback()
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail=f"Failed to delete coupon: {str(e)}"
+        )
+
+
 # ==========================================
 # REPORTS & ANALYTICS
 # ==========================================
@@ -702,27 +735,47 @@ def get_popular_sessions_report(db: Session = Depends(get_db)):
 
 
 @router.get("/reports/active-members")
-def get_active_members_count(db: Session = Depends(get_db)):
+def get_active_members_list(db: Session = Depends(get_db)):
     """
-    Get count of active members
+    Get list of active members with their membership details
     """
     try:
         query = text("""
-            SELECT COUNT(DISTINCT user_id) as active_members
-            FROM memberships
-            WHERE status = 'active' AND end_date >= CURDATE()
+            SELECT 
+                u.id AS user_id,
+                u.name AS user_name,
+                u.email,
+                mp.name AS plan_name,
+                m.start_date,
+                m.end_date,
+                m.status
+            FROM memberships m
+            INNER JOIN users u ON m.user_id = u.id
+            INNER JOIN membership_plans mp ON m.membership_plan_id = mp.id
+            WHERE m.status = 'active' AND m.end_date >= CURDATE()
+            ORDER BY m.end_date DESC
+            LIMIT 50
         """)
         
-        result = db.execute(query).fetchone()
+        results = db.execute(query).fetchall()
         
-        return {
-            "active_members": result[0]
-        }
+        return [
+            {
+                "user_id": row[0],
+                "user_name": row[1],
+                "email": row[2],
+                "plan_name": row[3],
+                "start_date": row[4].isoformat() if row[4] else None,
+                "end_date": row[5].isoformat() if row[5] else None,
+                "status": row[6]
+            }
+            for row in results
+        ]
         
     except Exception as e:
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-            detail=f"Failed to get active members count: {str(e)}"
+            detail=f"Failed to get active members list: {str(e)}"
         )
 
 
@@ -763,4 +816,29 @@ def get_top_performing_branch(db: Session = Depends(get_db)):
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
             detail=f"Failed to get top performing branch: {str(e)}"
+        )
+
+
+@router.get("/reports/total-membership-revenue")
+def get_total_membership_revenue(db: Session = Depends(get_db)):
+    """
+    Get total revenue from all membership purchases
+    """
+    try:
+        query = text("""
+            SELECT COALESCE(SUM(amount), 0) as total_revenue
+            FROM payments
+            WHERE membership_id IS NOT NULL AND status = 'success'
+        """)
+        
+        result = db.execute(query).fetchone()
+        
+        return {
+            "total_revenue": float(result[0]) if result else 0.0
+        }
+        
+    except Exception as e:
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail=f"Failed to get membership revenue: {str(e)}"
         )

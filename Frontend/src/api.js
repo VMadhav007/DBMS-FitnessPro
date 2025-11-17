@@ -60,6 +60,7 @@ export const adminAPI = {
   // Coupons
   getCoupons: () => api.get('/admin/coupons'),
   createCoupon: (data) => api.post('/admin/coupons', data),
+  deleteCoupon: (id) => api.delete(`/admin/coupons/${id}`),
   
   // Reports
   getRevenueReport: () => api.get('/admin/reports/revenue'),
@@ -67,6 +68,7 @@ export const adminAPI = {
   getPopularSessions: () => api.get('/admin/reports/popular-sessions'),
   getActiveMembers: () => api.get('/admin/reports/active-members'),
   getTopBranch: () => api.get('/admin/reports/top-performing-branch'),
+  getTotalMembershipRevenue: () => api.get('/admin/reports/total-membership-revenue'),
 };
 
 export default api;

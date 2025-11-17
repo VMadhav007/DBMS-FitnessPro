@@ -5,9 +5,11 @@ import './AdminDashboard.css';
 
 function AdminDashboard() {
   const [stats, setStats] = useState({
-    revenue: [],
+    membershipRevenue: 0,
     activeMembers: [],
-    popularSessions: []
+    popularSessions: [],
+    totalSessions: 0,
+    activeCoupons: 0
   });
   const [loading, setLoading] = useState(true);
 
@@ -17,16 +19,20 @@ function AdminDashboard() {
 
   const loadDashboardData = async () => {
     try {
-      const [revenueRes, activeMembersRes, popularSessionsRes] = await Promise.all([
-        adminAPI.getRevenueReport(),
+      const [membershipRevenueRes, activeMembersRes, popularSessionsRes, sessionsRes, couponsRes] = await Promise.all([
+        adminAPI.getTotalMembershipRevenue(),
         adminAPI.getActiveMembers(),
-        adminAPI.getPopularSessions()
+        adminAPI.getPopularSessions(),
+        adminAPI.getSessions(),
+        adminAPI.getCoupons()
       ]);
 
       setStats({
-        revenue: revenueRes.data,
+        membershipRevenue: membershipRevenueRes.data.total_revenue,
         activeMembers: activeMembersRes.data,
-        popularSessions: popularSessionsRes.data
+        popularSessions: popularSessionsRes.data,
+        totalSessions: sessionsRes.data.length,
+        activeCoupons: couponsRes.data.filter(c => c.is_active && new Date(c.valid_to) >= new Date()).length
       });
     } catch (err) {
       console.error('Failed to load dashboard data:', err);
@@ -40,12 +46,18 @@ function AdminDashboard() {
     return `₹${parseFloat(amount).toFixed(2)}`;
   };
 
-  const totalRevenue = stats.revenue.reduce((sum, item) => sum + parseFloat(item.total_revenue || 0), 0);
+  const totalRevenue = stats.membershipRevenue;
   const totalActiveMembers = stats.activeMembers.length;
   const totalPopularSessions = stats.popularSessions.reduce((sum, item) => sum + parseInt(item.total_bookings || 0), 0);
 
   if (loading) {
-    return <div className="admin-dashboard"><p>Loading dashboard...</p></div>;
+    return (
+      <div className="admin-dashboard" style={{display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: '100vh'}}>
+        <div style={{textAlign: 'center'}}>
+          <p>Loading dashboard...</p>
+        </div>
+      </div>
+    );
   }
 
   return (
@@ -55,6 +67,7 @@ function AdminDashboard() {
         <p>Manage your fitness center operations</p>
       </div>
 
+      {/* Stats Grid */}
       <div className="stats-grid">
         <div className="stat-card">
           <div className="stat-icon">💰</div>
@@ -81,108 +94,89 @@ function AdminDashboard() {
         </div>
 
         <div className="stat-card">
-          <div className="stat-icon">🏋️</div>
+          <div className="stat-icon">⏰</div>
           <div className="stat-info">
-            <h3>Sessions</h3>
-            <p className="stat-value">{stats.popularSessions.length}</p>
+            <h3>Total Sessions</h3>
+            <p className="stat-value">{stats.totalSessions}</p>
+          </div>
+        </div>
+
+        <div className="stat-card">
+          <div className="stat-icon">🎟️</div>
+          <div className="stat-info">
+            <h3>Active Coupons</h3>
+            <p className="stat-value">{stats.activeCoupons}</p>
           </div>
         </div>
       </div>
 
+      {/* Quick Actions */}
       <div className="quick-actions">
         <h2>Quick Actions</h2>
         <div className="actions-grid">
           <Link to="/admin/branches" className="action-card">
-            <span className="action-icon">🏢</span>
+            <div className="action-icon">🏢</div>
             <h3>Manage Branches</h3>
-            <p>Add, edit, or remove branches</p>
+            <p>Add, edit, or remove</p>
           </Link>
 
           <Link to="/admin/studios" className="action-card">
-            <span className="action-icon">🎯</span>
+            <div className="action-icon">🏋️</div>
             <h3>Manage Studios</h3>
-            <p>Configure studio spaces</p>
+            <p>Configure spaces</p>
           </Link>
 
           <Link to="/admin/sessions" className="action-card">
-            <span className="action-icon">📆</span>
+            <div className="action-icon">📋</div>
             <h3>Manage Sessions</h3>
-            <p>Schedule and manage sessions</p>
+            <p>Schedule sessions</p>
           </Link>
 
           <Link to="/admin/coupons" className="action-card">
-            <span className="action-icon">🎫</span>
+            <div className="action-icon">✨</div>
             <h3>Manage Coupons</h3>
-            <p>Create and manage discount coupons</p>
+            <p>Create discounts</p>
           </Link>
 
           <Link to="/admin/reports" className="action-card">
-            <span className="action-icon">📊</span>
+            <div className="action-icon">📊</div>
             <h3>View Reports</h3>
-            <p>Detailed analytics and reports</p>
+            <p>Detailed analytics</p>
           </Link>
         </div>
       </div>
 
-      <div className="dashboard-sections">
-        <div className="section">
-          <h2>Recent Revenue by Branch</h2>
-          <div className="table-container">
-            {stats.revenue.length > 0 ? (
-              <table className="data-table">
-                <thead>
-                  <tr>
-                    <th>Branch</th>
-                    <th>Total Revenue</th>
-                    <th>Total Bookings</th>
+      {/* Popular Sessions Table */}
+      <div className="section">
+        <h2>Popular Sessions</h2>
+        <p style={{color: 'var(--text-secondary)', fontSize: '0.875rem', marginBottom: '20px'}}>Most booked training sessions</p>
+        <div className="table-container">
+          {stats.popularSessions.length > 0 ? (
+            <table className="data-table">
+              <thead>
+                <tr>
+                  <th>Session</th>
+                  <th>Activity</th>
+                  <th>Total Bookings</th>
+                </tr>
+              </thead>
+              <tbody>
+                {stats.popularSessions.slice(0, 10).map((session, index) => (
+                  <tr key={index}>
+                    <td>{session.session_name}</td>
+                    <td>
+                      <span className="activity-badge">{session.activity_type}</span>
+                    </td>
+                    <td><strong>{session.total_bookings}</strong></td>
                   </tr>
-                </thead>
-                <tbody>
-                  {stats.revenue.map((item, index) => (
-                    <tr key={index}>
-                      <td>{item.branch_name}</td>
-                      <td className="currency">{formatCurrency(item.total_revenue)}</td>
-                      <td>{item.total_bookings}</td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            ) : (
-              <p className="empty-message">No revenue data available</p>
-            )}
-          </div>
-        </div>
-
-        <div className="section">
-          <h2>Popular Sessions</h2>
-          <div className="table-container">
-            {stats.popularSessions.length > 0 ? (
-              <table className="data-table">
-                <thead>
-                  <tr>
-                    <th>Session</th>
-                    <th>Activity</th>
-                    <th>Total Bookings</th>
-                    <th>Instructor</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {stats.popularSessions.slice(0, 10).map((session, index) => (
-                    <tr key={index}>
-                      <td>{session.session_name}</td>
-                      <td>
-                        <span className="activity-badge">{session.activity_type}</span>
-                      </td>
-                      <td>{session.total_bookings}</td>
-                      <td>{session.instructor_name}</td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            ) : (
-              <p className="empty-message">No session data available</p>
-            )}
-          </div>
+                ))}
+              </tbody>
+            </table>
+          ) : (
+            <div className="empty-message">
+              <p>No session data available</p>
+            </div>
+          )}
         </div>
       </div>
     </div>
