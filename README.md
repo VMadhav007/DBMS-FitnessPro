@@ -42,7 +42,7 @@ Before you begin, ensure you have the following installed:
 ### 1. Clone the Repository
 
 ```bash
-git clone https://github.com/VMadhav007/DBMS_SEM-5.git
+git clone https://github.com/VMadhav007/DBMS-FitnessPro.git
 cd DBMS_SEM-5
 ```
 
@@ -296,96 +296,7 @@ DBMS_SEM-5/
 └── README.md
 ```
 
----
 
-## 🐛 Troubleshooting
-
-### MySQL Connection Error
-
-**Error:** `Can't connect to MySQL server`
-
-**Solution:**
-```bash
-# Check if MySQL is running
-# Windows:
-net start MySQL80
-
-# Linux/Mac:
-sudo systemctl status mysql
-sudo systemctl start mysql
-```
-
-### Import Schema Fails
-
-**Error:** `ERROR 1064 (42000): You have an error in your SQL syntax`
-
-**Solution:**
-```bash
-# Make sure you're using MySQL 8.0+
-mysql --version
-
-# Try importing with source command
-mysql -u root -p
-USE Fitness_DB;
-source /path/to/schema.sql;
-```
-
-### Python Package Installation Error
-
-**Solution:**
-```bash
-# Upgrade pip first
-python -m pip install --upgrade pip
-
-# Then install requirements
-pip install -r requirements.txt
-```
-
-### Backend "Access Denied" Error
-
-**Solution:**
-- Check `.env` file has correct MySQL password
-- Ensure database `Fitness_DB` exists
-- Verify MySQL user has proper permissions
-
-### Frontend Won't Start
-
-**Solution:**
-```bash
-# Clear node_modules and reinstall
-rm -rf node_modules package-lock.json
-npm install
-
-# Or with PowerShell:
-Remove-Item -Recurse -Force node_modules
-Remove-Item package-lock.json
-npm install
-```
-
-### Port Already in Use
-
-**Backend (port 8000):**
-```bash
-# Windows (find and kill process):
-netstat -ano | findstr :8000
-taskkill /PID <PID> /F
-
-# Linux/Mac:
-lsof -ti:8000 | xargs kill -9
-```
-
-**Frontend (port 5173):**
-```bash
-# Change port in vite.config.js or kill process
-# Windows:
-netstat -ano | findstr :5173
-taskkill /PID <PID> /F
-
-# Linux/Mac:
-lsof -ti:5173 | xargs kill -9
-```
-
----
 
 ## 📊 Database Schema Overview
 
@@ -460,7 +371,7 @@ GROUP BY b.id;
 ## 👨‍💻 Developer
 
 **GitHub:** [VMadhav007](https://github.com/VMadhav007)  
-**Repository:** [DBMS_SEM-5](https://github.com/VMadhav007/DBMS_SEM-5)  
+**Repository:** [DBMS_SEM-5](https://github.com/VMadhav007/DBMS-FitnessPro)  
 
 ---
 
@@ -481,4 +392,5 @@ Built with FastAPI, React, MySQL, and TailwindCSS for academic learning and demo
 **⭐ Star this repository if you found it helpful! ⭐**
 
 </div>
+
 
