@@ -164,31 +164,6 @@ npm run dev
 ✅ **Frontend running at:** `http://localhost:5173`
 
 ---
-
-## 🔑 Test Accounts
-
-If you imported `sample_data.sql`, use these accounts to login:
-
-### Regular User Account
-- **Email:** `rahul@example.com`
-- **Password:** `password123`
-- Has active membership and booking history
-
-### Admin Account
-- **Email:** `admin@fitness.com`
-- **Password:** `password123`
-- Full admin access to all features
-
-### Other Test Users
-All test users have password: `password123`
-- `priya@example.com`
-- `amit@example.com`
-- `sneha@example.com`
-- `arjun@example.com`
-- `kavya@example.com`
-
----
-
 ## ✨ Features
 
 ### User Features
@@ -506,3 +481,4 @@ Built with FastAPI, React, MySQL, and TailwindCSS for academic learning and demo
 **⭐ Star this repository if you found it helpful! ⭐**
 
 </div>
+
