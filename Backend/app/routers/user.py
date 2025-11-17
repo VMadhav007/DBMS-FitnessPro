@@ -442,12 +442,12 @@ def get_available_sessions(db: Session = Depends(get_db)):
             FROM sessions s
             JOIN branches b ON s.branch_id = b.id
             JOIN activity_types at ON s.activity_type_id = at.id
-            WHERE s.capacity > 0 AND s.start_time > NOW()
+            WHERE s.capacity > 0 AND s.end_time > NOW()
             ORDER BY s.start_time ASC
         """)
         
         print(f"[USER SESSIONS] Current time: {datetime.now()}")
-        print(f"[USER SESSIONS] Fetching sessions with start_time > NOW() and capacity > 0")
+        print(f"[USER SESSIONS] Fetching sessions with end_time > NOW() and capacity > 0")
         
         results = db.execute(query).fetchall()
         
